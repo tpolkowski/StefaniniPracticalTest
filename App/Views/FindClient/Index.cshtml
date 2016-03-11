@@ -1,0 +1,98 @@
+﻿@using App.ViewModels
+@model App.ViewModels.FindClientsViewModel
+@{
+    ViewBag.Title = "Find";
+}
+
+@{
+    var getTableByClientFormAjaxOpts = new AjaxOptions
+    {
+        UpdateTargetId = "table",
+        InsertionMode = InsertionMode.Replace,
+        HttpMethod = "POST"
+    };
+
+    var getRegionByCityIdFormAjaxOpts = new AjaxOptions
+    {
+        UpdateTargetId = "region",
+        InsertionMode = InsertionMode.Replace,
+        HttpMethod = "POST"
+    };
+}
+
+@* Ajax request form - send the search data parameters and return the partial with the table*@
+@using (Ajax.BeginForm("Table", "FindClient", getTableByClientFormAjaxOpts))
+{
+    <div class="col-xs-12 clientForm">
+        <div class="row">
+            <label class="col-xs-2 labelTextfFindClientForm">Name:</label>
+            <div class="col col-xs-3">
+                @Html.TextBoxFor(m => m.Name, new { @class = "form-control" })
+            </div>
+            <label class="col-xs-1 ">Gender:</label>
+            <div class="col col-xs-2">
+                @Html.EnumDropDownListFor(m => m.GenderEnum, new { @class = "form-control" })
+            </div>
+            <div class="col-xs-1"></div>
+            <button type="submit" class="btn btn-success col col-xs-2">Search</button>
+        </div>
+
+        <div class="row">
+            <label class="col-xs-2 labelTextfFindClientForm">City:</label>
+            <div class="col col-xs-3">
+                @Html.DropDownListFor(m => m.CityId, Model.CityEnumerable, "", new { @class = " form-control", @id = "cityIdGetTableByClientForm", @onchange = "getRegionByCityId()" })
+            </div>
+
+            <label class="col-xs-1 labelTextfFindClientForm">Region:</label>
+            <div id="region" class="col col-xs-3">
+                @Html.DropDownListFor(m => m.RegionId, Model.RegionEnumerable, "", new { @class = " form-control" })
+            </div>
+
+            <a class="btn btn-success col-xs-2" href="@Url.Action("Index", "FindClient")">Clear Fields</a>
+        </div>
+
+        <div class="row">
+            <label class="col-xs-2 labelTextfFindClientForm">Last Purchase:</label>
+            <div class='col-xs-2'>
+                <div class='input-group date' id='LastPurchase'>
+                    @Html.TextBoxFor(m => m.LastPurchase, new { @type = "text", @class = "form-control" })
+                    <span class="input-group-addon">
+                        <span class="glyphicon glyphicon-calendar"></span>
+                    </span>
+                </div>
+            </div>
+
+            <label class="col-xs-1 labelTextfFindClientForm">util</label>
+            <div class='col-xs-2'>
+                <div class="form-group">
+                    <div class='input-group date' id='LastPurchaseUntil'>
+                        @Html.TextBoxFor(m => m.LastPurchaseUntil, new { @type = "text", @class = "form-control" })
+                        <span class="input-group-addon">
+                            <span class="glyphicon glyphicon-calendar"></span>
+                        </span>
+                    </div>
+                </div>
+            </div>
+         </div>
+
+        <div class="row">
+            <label class="col-xs-2 labelTextfFindClientForm">Classification:</label>
+            <div class="col col-xs-3">
+                @Html.DropDownListFor(m => m.ClassificationId, Model.ClassificationEnumerable, "", new { @class = "form-control " })
+            </div>
+            <label class="col-xs-1 labelTextfFindClientForm">Seller:</label>
+            <div class="col col-xs-3">
+                @Html.DropDownListFor(m => m.SellerId, Model.SellerEnumerable, "", new { @class = "form-control " })
+            </div>
+        </div>
+    </div>
+}
+
+<div id="table"></div>
+
+@* Ajax request form - send the city id selected and return the partial with the dropdown*@
+@using (Ajax.BeginForm("Region", "FindClient", getRegionByCityIdFormAjaxOpts, new { id = "getRegionByCityIdForm" }))
+{
+    @Html.HiddenFor(m => m.CityId, new { @id = "cityIdGetRegionByCityIdForm" })
+    <button id="btnSubmitGetRegionByCityIdForm" type="submit" class="hidden" />
+}

@@ -1,0 +1,5 @@
+﻿@using App.ViewModels
+@model App.ViewModels.FindClientsViewModel
+
+@Html.DropDownListFor(m => m.RegionId, Model.RegionEnumerable, "", new { @class = " form-control" })
+

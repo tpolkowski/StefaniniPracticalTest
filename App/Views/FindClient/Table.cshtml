@@ -1,0 +1,48 @@
+﻿@using App.ViewModels
+@model App.ViewModels.FindClientsViewModel
+
+<div class="row">
+    @{ if (Model.ClientList.Any())
+        {
+            <table id="clientTable" class="table table-striped table-bordered" cellspacing="0" width="100%">
+                <thead>
+                    <tr>
+                        <th class="">Classification</th>
+                        <th class="">Name</th>
+                        <th class="">Phone</th>
+                        <th class="">Gender</th>
+                        <th class="">City</th>
+                        <th class="">Region</th>
+                        <th class="">Last Purchase</th>
+                        <th class="">Seller</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var cliente in Model.ClientList)
+                    {
+                        <tr>
+                            <td class="font-tabela">@cliente.Classification.Name</td>
+                            <td class="font-tabela">@cliente.Name</td>
+                            <td class="font-tabela">@cliente.Phone</td>
+                            <td class="font-tabela">@cliente.Gender</td>
+                            <td class="font-tabela">@cliente.City.Name</td>
+                            <td class="font-tabela">@cliente.City.Region[0].Name</td>
+                            <td class="font-tabela">@cliente.LastPurchase.ToShortDateString()</td>
+                            <td class="font-tabela">@cliente.Seller.Name</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        }
+        else
+        {
+            <p> Try again. Client(s) not found.</p>
+        }
+    }
+</div>
+
+<script type="text/javascript">
+$(document).ready(function() {
+    $('#clientTable').DataTable();
+});
+</script>
