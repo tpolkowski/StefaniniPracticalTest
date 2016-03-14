@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
 
@@ -9,20 +10,21 @@ namespace App.Models.Dal
     /// </summary>
     public class DbInterface
     {
+      
         //database connection string
-        const string _conect = @"Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename=C:\Users\Miguel\Desktop\Stefanini\App\App\App_Data\Database.mdf;Integrated Security=True";
+        private static readonly string Conect = @"Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename="+ AppDomain.CurrentDomain.BaseDirectory + @"App_Data\Database.mdf;Integrated Security=True";
             
         //sets sql connection instance
-        SqlConnection conn = new SqlConnection(_conect);
+        readonly SqlConnection _conn = new SqlConnection(Conect);
 
         //execute the query on db and return the result
         public List<Dictionary<string, string>> Find(string query)
         {
-            conn.Open();
+            _conn.Open();
 
             //criando o select e o objeto de consulta
             string sql = query;
-            SqlCommand cmd = new SqlCommand(sql, conn);
+            SqlCommand cmd = new SqlCommand(sql, _conn);
 
             //Pegando valores e colocando no DataTable 
             SqlDataAdapter adapter = new SqlDataAdapter(cmd);
@@ -30,19 +32,18 @@ namespace App.Models.Dal
             adapter.Fill(ds);
             DataTable dados = ds.Tables[0];
 
-            Dictionary<string, string> columns = new Dictionary<string, string>();
             List<Dictionary<string, string>> rows = new List<Dictionary<string, string>>();
 
             foreach (DataRow row in dados.Rows)
             {
-                columns = new Dictionary<string, string>();
+                var columns = new Dictionary<string, string>();
                 foreach (DataColumn column in dados.Columns)
                 {
                     columns.Add(column.ColumnName, row[column.Ordinal].ToString());
                 }
                 rows.Add(columns);
             }
-            conn.Close();
+            _conn.Close();
 
             return rows;
         }
