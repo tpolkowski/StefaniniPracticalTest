@@ -20,7 +20,7 @@ namespace App.Models.Dal
         //execute the query on db and return the result
         public List<Dictionary<string, string>> Find(string query)
         {
-            _conn.Open();
+            //_conn.Open();
 
             //criando o select e o objeto de consulta
             string sql = query;
